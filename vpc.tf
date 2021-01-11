@@ -34,3 +34,11 @@ resource "aws_subnet" "private_1a" {
     Name = "khabib-private-1a"
   }
 }
+
+#Elastic IPの構築
+resource "aws_eip" "khabib" {
+  vpc = true
+  tags = {
+    Name = "khabib-ngw-pub-a-EIP"
+  }
+}
