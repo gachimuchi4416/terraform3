@@ -65,3 +65,32 @@ resource "aws_security_group_rule" "ingress_priv_a_22" {
   cidr_blocks       = ["10.0.1.0/24"]
   security_group_id = aws_security_group.priv_a.id
 }
+
+#RDS用セキュリティグループの作成
+resource "aws_security_group" "rds_sg" {
+  name   = "rds-sg"
+  vpc_id = aws_vpc.khabib.id
+  tags = {
+    Name = "rds-sg"
+  }
+}
+
+#出ていく通信の設定
+resource "aws_security_group_rule" "egress_rds_sg" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = -1
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.rds_sg.id
+}
+
+#3306を受け入れる設定
+resource "aws_security_group_rule" "ingress_rds_3306" {
+  type              = "ingress"
+  from_port         = "3306"
+  to_port           = "3306"
+  protocol          = "tcp"
+  cidr_blocks       = ["10.0.2.0/24"]
+  security_group_id = aws_security_group.rds_sg.id
+}
