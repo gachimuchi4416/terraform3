@@ -35,6 +35,30 @@ resource "aws_subnet" "private_a" {
   }
 }
 
+#RDS用 Private Subnet
+resource "aws_subnet" "dbsub_a" {
+  vpc_id                  = aws_vpc.khabib.id
+  cidr_block              = "10.0.3.0/24"
+  availability_zone       = "ap-northeast-1a"
+  map_public_ip_on_launch = false
+
+  tags = {
+    Name = "khabib-db-private-1a"
+  }
+}
+
+resource "aws_subnet" "dbsub_c" {
+  vpc_id                  = aws_vpc.khabib.id
+  cidr_block              = "10.0.4.0/24"
+  availability_zone       = "ap-northeast-1c"
+  map_public_ip_on_launch = false
+
+  tags = {
+    Name = "khabib-db-private-1c"
+  }
+}
+
+
 #Elastic IPの構築
 resource "aws_eip" "ngw_eip_a" {
   vpc = true
