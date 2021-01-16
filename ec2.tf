@@ -22,7 +22,7 @@ resource "aws_instance" "web" {
   key_name               = aws_key_pair.auth.id
   iam_instance_profile   = aws_iam_instance_profile.ec2_profile.name
   subnet_id              = aws_subnet.public_a.id
-  vpc_security_group_ids = [aws_security_group.pub_a.id]
+  vpc_security_group_ids = [aws_security_group.pub_a.id,aws_security_group.share.id]
 
   root_block_device {
     volume_type           = "gp2"
@@ -48,7 +48,7 @@ resource "aws_instance" "ap" {
   key_name               = aws_key_pair.auth_priv.id
   iam_instance_profile   = aws_iam_instance_profile.ec2_profile.name
   subnet_id              = aws_subnet.private_a.id
-  vpc_security_group_ids = [aws_security_group.priv_a.id,aws_security_group.share.id]
+  vpc_security_group_ids = [aws_security_group.priv_a.id]
 
   root_block_device {
     volume_type           = "gp2"
