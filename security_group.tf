@@ -94,3 +94,62 @@ resource "aws_security_group_rule" "ingress_rds_3306" {
   cidr_blocks       = ["10.0.2.0/24"]
   security_group_id = aws_security_group.rds_sg.id
 }
+
+
+#ALBがHTTPSを受け付けるセキュリティグループの作成
+resource "aws_security_group" "alb_web" {
+  name   = "alb_web"
+  vpc_id = aws_vpc.khabib.id
+  tags = {
+    Name = "khabib-alb-web"
+  }
+}
+
+#出ていく通信の設定
+resource "aws_security_group_rule" "egress_alb_web" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = -1
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.alb_web.id
+}
+
+#HTTPSを受け入れる設定
+resource "aws_security_group_rule" "ingress_alb_web_443" {
+  type              = "ingress"
+  from_port         = "443"
+  to_port           = "443"
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.alb_web.id
+}
+
+#ALB-WEBサーバー間の通信を許可するSGの構築
+resource "aws_security_group" "share" {
+  name   = "share"
+  vpc_id = aws_vpc.khabib.id
+  tags = {
+    Name = "khabib-share"
+  }
+}
+
+#出ていく通信の設定
+resource "aws_security_group_rule" "egress_share" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = -1
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.share.id
+}
+
+#HTTPSを受け入れる設定
+resource "aws_security_group_rule" "ingress_share_self" {
+  type              = "ingress"
+  from_port         = "0"
+  to_port           = "0"
+  protocol          = "-1"
+  self              = true
+  security_group_id = aws_security_group.share.id
+}
