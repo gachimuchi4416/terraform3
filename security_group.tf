@@ -144,7 +144,7 @@ resource "aws_security_group_rule" "egress_share" {
   security_group_id = aws_security_group.share.id
 }
 
-#HTTPSを受け入れる設定
+#共通用SGを利用するリソース同士が全ての通信を受け入れる設定
 resource "aws_security_group_rule" "ingress_share_self" {
   type              = "ingress"
   from_port         = "0"
